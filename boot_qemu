@@ -1,0 +1,9 @@
+#!/bin/bash
+
+KERNEL=./linux-4.1/arch/x86_64/boot/bzImage
+INITRD=./initrd
+# Created using: qemu-img create -f qcow2 disk.img 8G
+DISK=../disk.img
+
+qemu-system-x86_64 -kernel $KERNEL -initrd $INITRD -hda $DISK -m 512M -s -append "root=/dev/sda"
+#qemu-system-x86_64 -kernel $KERNEL -initrd $INITRD -m 512M -s -append "root=/dev/sda" /dev/sda3
