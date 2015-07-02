@@ -5,5 +5,25 @@ INITRD=./initrd
 # Created using: qemu-img create -f qcow2 disk.img 8G
 DISK=../disk.img
 
-qemu-system-x86_64 -kernel $KERNEL -initrd $INITRD -hda $DISK -m 512M -s -append "root=/dev/sda"
+if ([ $# -gt 0 ] && [ "$1" == "--debug" ]); then
+  # gdb debug mode
+  qemu-system-x86_64 -kernel $KERNEL -initrd $INITRD -hda $DISK -m 512M -s -S -append "root=/dev/sda"
+
+elif [ $# -eq 0 ]; then
+  # Non gdb debug mode
+  qemu-system-x86_64 -kernel $KERNEL -initrd $INITRD -hda $DISK -m 512M -append "root=/dev/sda"
+
+else
+  echo "Usage:"
+  echo "  boot_qemu         [Non debug mode]"
+  echo "  boot_qemu --debug [gdb debug mode]"
+
+fi
+
+# Use physical disk /dev/sda3 to boot
 #qemu-system-x86_64 -kernel $KERNEL -initrd $INITRD -m 512M -s -append "root=/dev/sda" /dev/sda3
+
+# Commands while debugging
+# $ gdb linux-4.1/vmlinux
+# (gdb) target remote localhost:1234
+
